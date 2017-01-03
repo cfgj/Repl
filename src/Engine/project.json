@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "debugType": "portable"
+  },
+  "dependencies": {
+    "Microsoft.CodeAnalysis.CSharp.Scripting": "2.0.0-rc2",
+    "Autofac": "4.2.1",
+    "System.Threading.Tasks": "4.3.0",
+    "Core": "1.0.0"
+  },
+  "frameworks": {
+    "netstandard1.6": {
+      "dependencies": {
+        "NETStandard.Library": "1.6.1"
+      }
+    }
+  }
+}
