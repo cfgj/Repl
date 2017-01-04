@@ -17,7 +17,6 @@ namespace Repl.Engine.Roslyn
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<RoslynScriptEngine>().As<IScriptEngine>();
-            builder.RegisterType<ScriptResult>().As<IScriptResult>();
         }
     }
 }
