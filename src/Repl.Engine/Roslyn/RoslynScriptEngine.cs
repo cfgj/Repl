@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis;
 
 namespace Repl.Engine.Roslyn
 {
@@ -23,6 +25,11 @@ namespace Repl.Engine.Roslyn
         {
             try
             {
+                if (!IsComplete(script))
+                {
+                    return ScriptResult.Incomplete;
+                }
+
                 if (_sessionScriptState == null)
                 {
                     _scriptOptions = _scriptOptions.WithReferences(references.ToList()).WithImports(imports.ToList());
@@ -31,7 +38,7 @@ namespace Repl.Engine.Roslyn
 
                     _sessionScriptState = result;
 
-                    return new ScriptResult { ReturnedValue = result.ReturnValue };
+                    return new ScriptResult(returnedValue: result.ReturnValue);
                 }
                 else
                 {
@@ -41,17 +48,24 @@ namespace Repl.Engine.Roslyn
 
                     _sessionScriptState = result;
 
-                    return new ScriptResult { ReturnedValue = result.ReturnValue };
+                    return new ScriptResult(returnedValue: result.ReturnValue);
                 }
             }
             catch (CompilationErrorException ex)
             {
-                return new ScriptResult { CompilationException = ex };
+                return new ScriptResult(compilationException: ex);
             }
             catch (Exception ex)
             {
-                return new ScriptResult { ExecutionException = ex };
+                return new ScriptResult(executionException: ex);
             }
+        }
+
+        protected bool IsComplete(string code)
+        {
+            var options = new CSharpParseOptions(LanguageVersion.CSharp6, DocumentationMode.Parse, SourceCodeKind.Script, null);
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(code, options);
+            return SyntaxFactory.IsCompleteSubmission(syntaxTree);
         }
     }
 }

@@ -4,11 +4,23 @@ namespace Repl.Core.Engine
 {
     public class ScriptResult : IScriptResult
     {
-        public object ReturnedValue { get; set; }
+        public static readonly ScriptResult Incomplete = new ScriptResult { IsComplete = false };
 
-        public Exception ExecutionException { get; set; }
+        public ScriptResult(object returnedValue = null,
+                            Exception executionException = null,
+                            Exception compilationException = null)
+        {
+            ReturnedValue = returnedValue;
+            ExecutionException = executionException;
+            CompilationException = compilationException;
+            IsComplete = true;
+        }
 
-        public Exception CompilationException { get; set; }
+        public object ReturnedValue { get; private set; }
+
+        public Exception ExecutionException { get; private set; }
+
+        public Exception CompilationException { get; private set; }
 
         public bool ExecutionFailed
         {
@@ -19,5 +31,7 @@ namespace Repl.Core.Engine
         {
             get { return CompilationException != null; }
         }
+
+        public bool IsComplete { get; private set; }
     }
 }

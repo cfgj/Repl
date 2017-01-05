@@ -15,21 +15,35 @@ namespace Repl.Core
         {
             _console = console;
             _scriptExecutor = scriptExecutor;
+
+            Buffer = string.Empty;
         }
+
+        public string Buffer { get; protected set; }
 
         public async Task OnAsync()
         {
+            _console.WriteLine("Repl C#" + Environment.NewLine);
+
             while (await ExecuteLineAsync()) { }
         }
 
         private async Task<bool> ExecuteLineAsync()
         {
-            _console.Write(" > ");
-            var line = _console.ReadLine();
+            _console.Write(string.IsNullOrEmpty(Buffer) ? " > " : " : ");
+            Buffer += _console.ReadLine();
             try
             {
-                var result = await _scriptExecutor.ExecuteAsync(line);
-                WriteResult(result);
+                var result = await _scriptExecutor.ExecuteAsync(Buffer);
+                if (!result.IsComplete)
+                {
+                    Buffer += Environment.NewLine;
+                }
+                else
+                {
+                    WriteResult(result);
+                    Buffer = string.Empty;
+                }
                 return true;
             }
             catch
