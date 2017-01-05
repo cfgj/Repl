@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace Repl.Core.Engine
-{ 
+{
     public class ScriptExecutor : IScriptExecutor
     {
         public static readonly string[] DefaultReferences =
@@ -17,7 +17,7 @@ namespace Repl.Core.Engine
             "System.IO"
         };
 
-        private IScriptEngine _scriptEngine;
+        protected IScriptEngine _scriptEngine;
 
         public ScriptExecutor(IScriptEngine scriptEngine)
         {
@@ -32,7 +32,7 @@ namespace Repl.Core.Engine
         public async Task<IScriptResult> ExecuteAsync(string script, IEnumerable<string> references, IEnumerable<string> imports)
         {
             var allReferences = DefaultReferences.Union(references).Distinct();
-            var allImports =  DefaultImports.Union(imports).Distinct();
+            var allImports = DefaultImports.Union(imports).Distinct();
 
             return await _scriptEngine.RunAsync(script, allReferences, allImports);
         }

@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Repl.Core;
 using Repl.Core.Configuration;
 using Repl.Core.Engine;
 using Repl.Engine.Roslyn;
@@ -17,28 +18,13 @@ namespace Repl
 
             var container = builder.Build();
 
-            var executor = container.Resolve<IScriptExecutor>();
+            var repl = container.Resolve<IRepl>();
 
             Task.Run(async () =>
             {
-                IScriptResult result;
-                result = await executor.ExecuteAsync("var a = \"a\";");
-                WriteResult(result);
-                result = await executor.ExecuteAsync("var b = \"b\";");
-                WriteResult(result);
-                result = await executor.ExecuteAsync("Path.Combine(new string[] { a, b })");
-                WriteResult(result);
-            }).Wait();
-        }
+                await repl.OnAsync();
 
-        private static void WriteResult(IScriptResult result)
-        {
-            if (result.ExecutionFailed)
-                Console.WriteLine("Execution failed.");
-            else if (result.CompilationFailed)
-                Console.WriteLine("Compilation failed.");
-            else
-                Console.WriteLine(result.ReturnedValue ?? "(nothing)");
+            }).Wait();
         }
     }
 }
