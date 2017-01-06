@@ -1,4 +1,6 @@
 using Autofac;
+using Repl.Core.Command;
+using Repl.Core.Commands;
 using Repl.Core.Console;
 using Repl.Core.Engine;
 using Repl.Core.Serialization;
@@ -10,9 +12,18 @@ namespace Repl.Core.Configuration
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<ScriptExecutor>().As<IScriptExecutor>();
-            builder.RegisterType<ReplConsole>().As<IReplConsole>();
             builder.RegisterType<ReturnedValueSerializer>().As<IReturnedValueSerializer>();
-            builder.RegisterType<Repl>().As<IRepl>();
+            builder.RegisterType<ReplConsole>().As<IReplConsole>();
+
+            RegisterCommands(builder);
+        }
+
+        private void RegisterCommands(ContainerBuilder builder)
+        {
+            builder.RegisterType<CommandFactory>().As<ICommandFactory>();
+
+            builder.RegisterType<AddReferenceCommand>().As<IAddReferenceCommand>();
+            builder.RegisterType<LoadScriptCommand>().As<ILoadScriptCommand>();
         }
     }
 }
