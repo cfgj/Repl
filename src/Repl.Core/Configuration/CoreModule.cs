@@ -1,6 +1,7 @@
 using Autofac;
 using Repl.Core.Console;
 using Repl.Core.Engine;
+using Repl.Core.Serialization;
 
 namespace Repl.Core.Configuration
 {
@@ -10,6 +11,7 @@ namespace Repl.Core.Configuration
         {
             builder.RegisterType<ScriptExecutor>().As<IScriptExecutor>();
             builder.RegisterType<ReplConsole>().As<IReplConsole>();
+            builder.RegisterType<ReturnedValueSerializer>().As<IReturnedValueSerializer>();
             builder.RegisterType<Repl>().As<IRepl>();
         }
     }

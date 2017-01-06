@@ -9,12 +9,15 @@ namespace Repl.Core.Engine
         public static readonly string[] DefaultReferences =
         {
             "System",
+            "System.Core"
         };
 
         public static readonly string[] DefaultImports =
         {
             "System",
-            "System.IO"
+            "System.Collections.Generic",
+            "System.IO",
+            "System.Text"
         };
 
         protected IScriptEngine _scriptEngine;

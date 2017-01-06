@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Repl.Core.Console;
 using Repl.Core.Engine;
+using Repl.Core.Serialization;
 
 namespace Repl.Core
 {
@@ -11,10 +12,13 @@ namespace Repl.Core
 
         protected IScriptExecutor _scriptExecutor;
 
-        public Repl(IReplConsole console, IScriptExecutor scriptExecutor)
+        protected IReturnedValueSerializer _serilizer;
+
+        public Repl(IReplConsole console, IScriptExecutor scriptExecutor, IReturnedValueSerializer serilizer)
         {
             _console = console;
             _scriptExecutor = scriptExecutor;
+            _serilizer = serilizer;
 
             Buffer = string.Empty;
         }
@@ -23,7 +27,7 @@ namespace Repl.Core
 
         public async Task OnAsync()
         {
-            _console.WriteLine("Repl C#" + Environment.NewLine);
+            _console.WriteLine("C# Repl " + Environment.NewLine);
 
             while (await ExecuteLineAsync()) { }
         }
@@ -67,7 +71,7 @@ namespace Repl.Core
             else if (result.ReturnedValue != null)
             {
                 _console.ForegroundColor = ConsoleColor.Green;
-                _console.WriteLine("=> " + result.ReturnedValue.ToString());
+                _console.WriteLine("=> " + _serilizer.Serialize(result.ReturnedValue));
             }
             _console.ResetColor();
         }
