@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,21 +18,19 @@ namespace Repl
         protected IReplConsole _console;
         protected IScriptExecutor _scriptExecutor;
         protected IReturnedValueSerializer _serializer;
-        protected ICommandFactory _commandFactory;
         protected IComponentContext _componentContext;
 
         protected CommandParser _commandParser;
+        protected IDictionary<string, ICommand> _commands;
 
         public Repl(IReplConsole console,
                     IScriptExecutor scriptExecutor,
                     IReturnedValueSerializer serializer,
-                    ICommandFactory commandFactory,
                     IComponentContext componentContext)
         {
             _console = console;
             _scriptExecutor = scriptExecutor;
             _serializer = serializer;
-            _commandFactory = commandFactory;
             _componentContext = componentContext;
 
             _commandParser = new CommandParser();
@@ -58,10 +57,13 @@ namespace Repl
 
         private void RegisterCommands()
         {
-            // var addReferenceCommand = _componentContext.Resolve<IAddReferenceCommand>();
-            // _commandFactory.RegisterCommand(addReferenceCommand);
-            var loadScriptCommand = _componentContext.Resolve<ILoadScriptCommand>();
-            _commandFactory.RegisterCommand(loadScriptCommand);
+            var commands = new List<ICommand>
+            {
+                //_componentContext.Resolve<IAddReferenceCommand>(),
+                _componentContext.Resolve<ILoadScriptCommand>(),
+                _componentContext.Resolve<IResetExecutionEnvironmentCommand>()
+            };
+            _commands = commands.ToDictionary(c => c.Name);
         }
 
         private async Task<bool> ExecuteLineAsync()
@@ -98,10 +100,19 @@ namespace Repl
 
             try
             {
-                var command = _commandFactory.GetCommand(commandInfo.CommandName);
-                var commandResult = await command.ExecuteAsync(_scriptExecutor, commandInfo.CommandArgs);
+                var command = _commands.Where(c => c.Key == commandInfo.CommandName).Select(c => c.Value).FirstOrDefault();
 
-                WriteCommandResult(commandResult);
+                if (command == null)
+                {
+                    _console.ForegroundColor = ConsoleColor.Red;
+                    _console.WriteLine($"Command \"{commandInfo.CommandName}\" does not exist.");
+                    _console.ResetColor();
+                }
+                else
+                {
+                    var commandResult = await command.ExecuteAsync(_scriptExecutor, commandInfo.CommandArgs);
+                    WriteCommandResult(commandResult);
+                }
             }
             catch (Exception ex)
             {

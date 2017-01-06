@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Repl.Core.Command;
@@ -15,11 +14,13 @@ namespace Repl.Core.Commands
             get { return "load"; }
         }
 
-        public override async Task<CommandResult> ExecuteAsync(IScriptExecutor scriptExecutor, params string[] args)
+        public override int ArgumentsNumber
         {
-            if (!CorrectArgumentsCount(1, args))
-                new CommandResult(ExecutedCommandStatus.Error, "Wrong arguments count.");
+            get { return 1; }
+        }
 
+        protected override async Task<CommandResult> InternalExecuteAsync(IScriptExecutor scriptExecutor, params string[] args)
+        {
             var scriptPath = args[0];
 
             if (File.Exists(scriptPath))
@@ -47,7 +48,7 @@ namespace Repl.Core.Commands
             {
                 return result.ExecutionException.Message;
             }
-            return null;
+            return "Script executed properly.";
         }
     }
 }

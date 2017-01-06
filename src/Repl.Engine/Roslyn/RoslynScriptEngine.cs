@@ -18,7 +18,13 @@ namespace Repl.Engine.Roslyn
 
         public RoslynScriptEngine()
         {
+            Reset();
+        }
+
+        public void Reset()
+        {
             _scriptOptions = ScriptOptions.Default;
+            _sessionScriptState = null;
         }
 
         public virtual async Task<IScriptResult> RunAsync(string script, IEnumerable<string> references, IEnumerable<string> imports)

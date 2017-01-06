@@ -21,7 +21,6 @@ namespace Repl
             Task.Run(async () =>
             {
                 await repl.OnAsync();
-
             }).Wait();
         }
     }

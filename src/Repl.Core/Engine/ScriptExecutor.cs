@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Repl.Core.Engine
@@ -52,6 +51,12 @@ namespace Repl.Core.Engine
             var allImports = DefaultImports.Union(imports).Distinct();
 
             return await _scriptEngine.RunAsync(script, allReferences, allImports);
+        }
+
+        public void Reset()
+        {
+            _references.Clear();
+            _scriptEngine.Reset();
         }
     }
 }

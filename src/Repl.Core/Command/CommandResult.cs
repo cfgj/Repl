@@ -2,7 +2,7 @@ namespace Repl.Core.Command
 {
     public class CommandResult
     {
-        public CommandResult(ExecutedCommandStatus status, string message)
+        public CommandResult(ExecutedCommandStatus status, string message = null)
         {
             Status = status;
             Message = message;

@@ -14,7 +14,12 @@ namespace Repl.Core.Commands
             get { return "r"; }
         }
 
-        public override Task<CommandResult> ExecuteAsync(IScriptExecutor scriptExecutor, params string[] args)
+        public override int ArgumentsNumber
+        {
+            get { return 1; }
+        }
+
+        protected override Task<CommandResult> InternalExecuteAsync(IScriptExecutor scriptExecutor, params string[] args)
         {
             // if (args.Length != 1)
             //     new CommandResult(ExecutedCommandStatus.Error, "Wrong arguments count.");

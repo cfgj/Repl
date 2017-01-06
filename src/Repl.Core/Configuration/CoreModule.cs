@@ -1,5 +1,4 @@
 using Autofac;
-using Repl.Core.Command;
 using Repl.Core.Commands;
 using Repl.Core.Console;
 using Repl.Core.Engine;
@@ -20,10 +19,9 @@ namespace Repl.Core.Configuration
 
         private void RegisterCommands(ContainerBuilder builder)
         {
-            builder.RegisterType<CommandFactory>().As<ICommandFactory>();
-
             builder.RegisterType<AddReferenceCommand>().As<IAddReferenceCommand>();
             builder.RegisterType<LoadScriptCommand>().As<ILoadScriptCommand>();
+            builder.RegisterType<ResetExecutionEnvironmentCommand>().As<IResetExecutionEnvironmentCommand>();
         }
     }
 }

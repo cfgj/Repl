@@ -10,5 +10,7 @@ namespace Repl.Core.Engine
         Task<IScriptResult> ExecuteAsync(string script);
 
         Task<IScriptResult> ExecuteAsync(string script, IEnumerable<string> references, IEnumerable<string> imports);
+
+        void Reset();
     }
 }
