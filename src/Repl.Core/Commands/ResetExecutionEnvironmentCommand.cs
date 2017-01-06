@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Repl.Core.Command;
-using Repl.Core.Engine;
 
 namespace Repl.Core.Commands
 {
@@ -18,9 +17,17 @@ namespace Repl.Core.Commands
             get { return 0; }
         }
 
-        protected override Task<CommandResult> InternalExecuteAsync(IScriptExecutor scriptExecutor, params string[] args)
+        public override string Description
         {
-            scriptExecutor.Reset();
+            get
+            {
+                return "Reset the execution environment to the initial state.";
+            }
+        }
+
+        protected override Task<CommandResult> InternalExecuteAsync(CommandContext context, params string[] args)
+        {
+            context.ScriptExecutor.Reset();
             var result = new CommandResult(ExecutedCommandStatus.Success, "Execution environment restored to the initial state.");
 
             return Task.FromResult(result);

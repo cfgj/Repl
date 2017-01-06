@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Repl.Core.Engine;
 
 namespace Repl.Core.Command
 {
@@ -7,6 +6,8 @@ namespace Repl.Core.Command
     {
         string Name { get; }
 
-        Task<CommandResult> ExecuteAsync(IScriptExecutor scriptExecutor, params string[] args);
+        string Description { get; }
+
+        Task<CommandResult> ExecuteAsync(CommandContext context, params string[] args);
     }
 }

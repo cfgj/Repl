@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Repl.Core.Command;
-using Repl.Core.Engine;
 
 namespace Repl.Core.Commands
 {
@@ -19,7 +18,15 @@ namespace Repl.Core.Commands
             get { return 1; }
         }
 
-        protected override Task<CommandResult> InternalExecuteAsync(IScriptExecutor scriptExecutor, params string[] args)
+        public override string Description
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        protected override Task<CommandResult> InternalExecuteAsync(CommandContext context, params string[] args)
         {
             // if (args.Length != 1)
             //     new CommandResult(ExecutedCommandStatus.Error, "Wrong arguments count.");

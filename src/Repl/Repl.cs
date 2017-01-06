@@ -15,13 +15,14 @@ namespace Repl
 {
     public class Repl
     {
-        protected IReplConsole _console;
-        protected IScriptExecutor _scriptExecutor;
-        protected IReturnedValueSerializer _serializer;
-        protected IComponentContext _componentContext;
+        protected readonly IReplConsole _console;
+        protected readonly IScriptExecutor _scriptExecutor;
+        protected readonly IReturnedValueSerializer _serializer;
+        protected readonly IComponentContext _componentContext;
 
-        protected CommandParser _commandParser;
-        protected IDictionary<string, ICommand> _commands;
+        protected readonly CommandParser _commandParser;
+        protected readonly IDictionary<string, ICommand> _commands;
+        protected readonly CommandContext _commandContext;
 
         public Repl(IReplConsole console,
                     IScriptExecutor scriptExecutor,
@@ -33,11 +34,19 @@ namespace Repl
             _serializer = serializer;
             _componentContext = componentContext;
 
+            var commands = new List<ICommand>
+            {
+                //_componentContext.Resolve<IAddReferenceCommand>(),
+                _componentContext.Resolve<ILoadScriptCommand>(),
+                _componentContext.Resolve<IResetExecutionEnvironmentCommand>(),
+                _componentContext.Resolve<IHelpCommand>()
+            };
+            _commands = commands.ToDictionary(c => c.Name);
+
             _commandParser = new CommandParser();
+            _commandContext = new CommandContext(_scriptExecutor, _console, _commands);
 
             Buffer = string.Empty;
-
-            RegisterCommands();
         }
 
         #region Public methods
@@ -46,7 +55,7 @@ namespace Repl
 
         public async Task OnAsync()
         {
-            _console.WriteLine("C# Repl " + Environment.NewLine);
+            _console.WriteLine("C# Repl (type #help for help) " + Environment.NewLine);
 
             while (await ExecuteLineAsync()) { }
         }
@@ -54,17 +63,6 @@ namespace Repl
         #endregion
 
         #region Private methods
-
-        private void RegisterCommands()
-        {
-            var commands = new List<ICommand>
-            {
-                //_componentContext.Resolve<IAddReferenceCommand>(),
-                _componentContext.Resolve<ILoadScriptCommand>(),
-                _componentContext.Resolve<IResetExecutionEnvironmentCommand>()
-            };
-            _commands = commands.ToDictionary(c => c.Name);
-        }
 
         private async Task<bool> ExecuteLineAsync()
         {
@@ -110,7 +108,7 @@ namespace Repl
                 }
                 else
                 {
-                    var commandResult = await command.ExecuteAsync(_scriptExecutor, commandInfo.CommandArgs);
+                    var commandResult = await command.ExecuteAsync(_commandContext, commandInfo.CommandArgs);
                     WriteCommandResult(commandResult);
                 }
             }
@@ -128,19 +126,24 @@ namespace Repl
 
         public void WriteCommandResult(CommandResult result)
         {
-            if (result.Status == ExecutedCommandStatus.Success)
+            if (!string.IsNullOrWhiteSpace(result.Message))
             {
-                _console.ForegroundColor = ConsoleColor.Green;
-                _console.Write("Success");
+                if (result.Status == ExecutedCommandStatus.Success)
+                {
+                    _console.ForegroundColor = ConsoleColor.Green;
+                    _console.Write("Success");
+                }
+                else if (result.Status == ExecutedCommandStatus.Error)
+                {
+                    _console.ForegroundColor = ConsoleColor.Red;
+                    _console.Write("Error");
+                }
+
+                _console.Write(": ");
+                _console.WriteLine(result.Message);
+
+                _console.ResetColor();
             }
-            else if (result.Status == ExecutedCommandStatus.Error)
-            {
-                _console.ForegroundColor = ConsoleColor.Red;
-                _console.Write("Error");
-            }
-            _console.Write(": ");
-            _console.WriteLine(result.Message ?? "(no message)");
-            _console.ResetColor();
         }
 
         private async Task ExecuteScriptAsync()

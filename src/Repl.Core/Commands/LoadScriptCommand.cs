@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Repl.Core.Command;
@@ -19,14 +20,22 @@ namespace Repl.Core.Commands
             get { return 1; }
         }
 
-        protected override async Task<CommandResult> InternalExecuteAsync(IScriptExecutor scriptExecutor, params string[] args)
+        public override string Description
+        {
+            get
+            {
+                return "Is used to execute a script file. Arguments: path.";
+            }
+        }
+
+        protected override async Task<CommandResult> InternalExecuteAsync(CommandContext context, params string[] args)
         {
             var scriptPath = args[0];
 
             if (File.Exists(scriptPath))
             {
                 var script = File.ReadAllText(scriptPath);
-                var scriptResult = await scriptExecutor.ExecuteAsync(script);
+                var scriptResult = await context.ScriptExecutor.ExecuteAsync(script);
 
                 var commandStatus = scriptResult.Success ? ExecutedCommandStatus.Success : ExecutedCommandStatus.Error;
 
