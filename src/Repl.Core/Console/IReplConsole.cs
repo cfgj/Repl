@@ -6,7 +6,11 @@ namespace Repl.Core.Console
     {
         void Write(string value);
 
+        void Write(string value, ConsoleColor color);
+
         void WriteLine(string value);
+
+        void WriteLine(string value, ConsoleColor color);
 
         string ReadLine();
 

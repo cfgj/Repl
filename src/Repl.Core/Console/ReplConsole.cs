@@ -11,9 +11,23 @@ namespace Repl.Core.Console
             C.Write(value);
         }
 
+        public void Write(string value, ConsoleColor color)
+        {
+            C.BackgroundColor = color;
+            Write(value);
+            ResetColor();
+        }
+
         public void WriteLine(string value)
         {
             C.WriteLine(value);
+        }
+
+        public void WriteLine(string value, ConsoleColor color)
+        {
+            C.ForegroundColor = color;
+            WriteLine(value);
+            ResetColor();
         }
 
         public string ReadLine()

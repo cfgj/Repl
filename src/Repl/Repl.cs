@@ -55,7 +55,7 @@ namespace Repl
 
         public async Task OnAsync()
         {
-            _console.WriteLine("C# Repl (type #help for help) " + Environment.NewLine);
+            _console.WriteLine("C# Repl (type #help for help)" + Environment.NewLine);
 
             while (await ExecuteLineAsync()) { }
         }
@@ -102,9 +102,7 @@ namespace Repl
 
                 if (command == null)
                 {
-                    _console.ForegroundColor = ConsoleColor.Red;
-                    _console.WriteLine($"Command \"{commandInfo.CommandName}\" does not exist.");
-                    _console.ResetColor();
+                    _console.WriteLine($"Command \"{commandInfo.CommandName}\" does not exist.", ConsoleColor.Red);
                 }
                 else
                 {
@@ -114,9 +112,7 @@ namespace Repl
             }
             catch (Exception ex)
             {
-                _console.ForegroundColor = ConsoleColor.Red;
-                _console.WriteLine(ex.Message);
-                _console.ResetColor();
+                _console.WriteLine(ex.Message, ConsoleColor.Red);
             }
             finally
             {
@@ -164,20 +160,16 @@ namespace Repl
         {
             if (result.CompilationFailed)
             {
-                _console.ForegroundColor = ConsoleColor.Red;
-                _console.WriteLine(result.CompilationException.Message);
+                _console.WriteLine(result.CompilationException.Message, ConsoleColor.Red);
             }
             else if (result.ExecutionFailed)
             {
-                _console.ForegroundColor = ConsoleColor.Red;
-                _console.WriteLine(result.ExecutionException.Message);
+                _console.WriteLine(result.ExecutionException.Message, ConsoleColor.Red);
             }
             else if (result.ReturnedValue != null)
             {
-                _console.ForegroundColor = ConsoleColor.Green;
-                _console.WriteLine("=> " + _serializer.Serialize(result.ReturnedValue));
+                _console.WriteLine("=> " + _serializer.Serialize(result.ReturnedValue), ConsoleColor.Green);
             }
-            _console.ResetColor();
         }
 
         #endregion
