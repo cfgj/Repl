@@ -22,6 +22,11 @@ namespace Repl.Core.Engine
 
         public Exception CompilationException { get; private set; }
 
+        public bool Success
+        {
+            get { return !ExecutionFailed && !CompilationFailed; }
+        }
+
         public bool ExecutionFailed
         {
             get { return ExecutionException != null; }

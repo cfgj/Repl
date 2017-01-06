@@ -12,7 +12,7 @@ namespace Repl.Core.Commands
     {
         public override string Name
         {
-            get { return "l"; }
+            get { return "load"; }
         }
 
         public override async Task<CommandResult> ExecuteAsync(IScriptExecutor scriptExecutor, params string[] args)
@@ -27,7 +27,9 @@ namespace Repl.Core.Commands
                 var script = File.ReadAllText(scriptPath);
                 var scriptResult = await scriptExecutor.ExecuteAsync(script);
 
-                return new CommandResult(ExecutedCommandStatus.Success, PrepareMessage(scriptResult));
+                var commandStatus = scriptResult.Success ? ExecutedCommandStatus.Success : ExecutedCommandStatus.Error;
+
+                return new CommandResult(commandStatus, PrepareMessage(scriptResult));
             }
             else
             {

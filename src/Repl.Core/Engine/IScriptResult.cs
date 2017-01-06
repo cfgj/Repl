@@ -12,6 +12,8 @@ namespace Repl.Core.Engine
 
         Exception CompilationException { get; }
 
+        bool Success { get; }
+
         bool ExecutionFailed { get; }
 
         bool CompilationFailed { get; }
