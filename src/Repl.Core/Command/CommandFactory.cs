@@ -16,7 +16,7 @@ namespace Repl.Core.Command
         public void RegisterCommand(ICommand command)
         {
             if (_commands.ContainsKey(command.Name))
-                throw new Exception($"Command `{command.Name}` is already registered.");
+                throw new Exception($"Command \"{command.Name}\" is already registered.");
             _commands.Add(command.Name, command);
         }
 
@@ -24,7 +24,7 @@ namespace Repl.Core.Command
         {
             var command = _commands.Where(c => c.Key == name).Select(c => c.Value).FirstOrDefault();
             if (command == null)
-                throw new Exception($"Command `{name}` is not registered.");
+                throw new Exception($"Command \"{name}\" is not registered.");
             return command;
         }
     }
