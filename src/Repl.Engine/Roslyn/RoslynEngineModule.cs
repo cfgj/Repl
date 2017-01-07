@@ -7,9 +7,9 @@ namespace Repl.Engine.Roslyn
     public class RoslynEngineModule : EngineModule
     {
         public sealed override string Name
-        { 
+        {
             get
-            { 
+            {
                 return "Roslyn";
             }
         }

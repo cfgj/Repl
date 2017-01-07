@@ -2,6 +2,7 @@
     "projects": [
         "Repl",
         "Repl.Core",
-        "Repl.Engine"
+        "Repl.Engine",
+        "Repl.Utils"
     ]
 }

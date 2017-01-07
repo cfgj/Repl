@@ -10,6 +10,7 @@ using Repl.Core.Commands;
 using Repl.Core.Console;
 using Repl.Core.Engine;
 using Repl.Core.Serialization;
+using Repl.Utils;
 
 namespace Repl
 {
@@ -29,6 +30,11 @@ namespace Repl
                     IReturnedValueSerializer serializer,
                     IComponentContext componentContext)
         {
+            ArgumentsGuard.ThrowIfNull(console, nameof(console));
+            ArgumentsGuard.ThrowIfNull(scriptExecutor, nameof(scriptExecutor));
+            ArgumentsGuard.ThrowIfNull(serializer, nameof(serializer));
+            ArgumentsGuard.ThrowIfNull(componentContext, nameof(componentContext));
+
             _console = console;
             _scriptExecutor = scriptExecutor;
             _serializer = serializer;

@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using Repl.Core.Configuration;
 using Repl.Engine.Roslyn;
-using System.Threading.Tasks;
 
 namespace Repl
 {
@@ -18,10 +17,7 @@ namespace Repl
 
             var repl = container.Resolve<Repl>();
 
-            Task.Run(async () =>
-            {
-                await repl.OnAsync();
-            }).Wait();
+            repl.OnAsync().GetAwaiter().GetResult();
         }
     }
 }

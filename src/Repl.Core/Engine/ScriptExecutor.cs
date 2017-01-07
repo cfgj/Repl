@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Repl.Utils;
 
 namespace Repl.Core.Engine
 {
@@ -17,15 +18,18 @@ namespace Repl.Core.Engine
             "System",
             "System.Collections.Generic",
             "System.IO",
+            "System.Threading.Tasks",
             "System.Text"
         };
 
-        protected IScriptEngine _scriptEngine;
+        protected readonly IScriptEngine _scriptEngine;
 
         protected HashSet<string> _references;
 
         public ScriptExecutor(IScriptEngine scriptEngine)
         {
+            ArgumentsGuard.ThrowIfNull(scriptEngine, nameof(scriptEngine));
+
             _scriptEngine = scriptEngine;
 
             _references = new HashSet<string>();
