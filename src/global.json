@@ -1,0 +1,7 @@
+{
+    "projects": [
+        "Repl",
+        "Repl.Core",
+        "Repl.Engine"
+    ]
+}
