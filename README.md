@@ -1,0 +1,1 @@
+To run REPL you need to install .NET Core ([Download link](https://www.microsoft.com/net/download/core)), go to the `src` directory, run command `dotnet restore` and in `src/Repl` run `dotnet run`.
