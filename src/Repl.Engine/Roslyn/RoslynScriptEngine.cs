@@ -21,6 +21,20 @@ namespace Repl.Engine.Roslyn
             Reset();
         }
 
+        #region IScriptEngine
+
+        public IEnumerable<ScriptVariableData> Vars
+        {
+            get
+            {
+                if (_sessionScriptState != null)
+                {
+                    return GetVariables();
+                }
+                return new List<ScriptVariableData>();
+            }
+        }
+
         public void Reset()
         {
             _scriptOptions = ScriptOptions.Default;
@@ -41,7 +55,6 @@ namespace Repl.Engine.Roslyn
                     _scriptOptions = _scriptOptions.WithReferences(references.ToList()).WithImports(imports.ToList());
 
                     var result = await CSharpScript.RunAsync(script, _scriptOptions);
-
                     _sessionScriptState = result;
 
                     return new ScriptResult(returnedValue: result.ReturnValue);
@@ -51,7 +64,6 @@ namespace Repl.Engine.Roslyn
                     _scriptOptions = _scriptOptions.WithReferences(references).WithImports(imports);
 
                     var result = await _sessionScriptState.ContinueWithAsync(script, _scriptOptions);
-
                     _sessionScriptState = result;
 
                     return new ScriptResult(returnedValue: result.ReturnValue);
@@ -67,11 +79,26 @@ namespace Repl.Engine.Roslyn
             }
         }
 
+        #endregion
+
+        #region Protected methods
+
+        protected IEnumerable<ScriptVariableData> GetVariables()
+        {
+            return _sessionScriptState.Variables.GroupBy(v => v.Name).Select(gv => new ScriptVariableData
+            {
+                Name = gv.Key,
+                Type = gv.Last().Type
+            });
+        }
+
         protected bool IsComplete(string code)
         {
             var options = new CSharpParseOptions(LanguageVersion.CSharp6, DocumentationMode.Parse, SourceCodeKind.Script, null);
             var syntaxTree = SyntaxFactory.ParseSyntaxTree(code, options);
             return SyntaxFactory.IsCompleteSubmission(syntaxTree);
         }
+
+        #endregion
     }
 }

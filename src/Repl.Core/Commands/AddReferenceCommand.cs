@@ -13,11 +13,6 @@ namespace Repl.Core.Commands
             get { return "r"; }
         }
 
-        public override int ArgumentsNumber
-        {
-            get { return 1; }
-        }
-
         public override string Description
         {
             get
@@ -26,7 +21,7 @@ namespace Repl.Core.Commands
             }
         }
 
-        protected override Task<CommandResult> InternalExecuteAsync(CommandContext context, params string[] args)
+        public override Task<CommandResult> ExecuteAsync(CommandContext context, params string[] args)
         {
             // if (args.Length != 1)
             //     new CommandResult(ExecutedCommandStatus.Error, "Wrong arguments count.");

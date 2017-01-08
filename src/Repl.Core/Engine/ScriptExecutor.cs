@@ -35,6 +35,11 @@ namespace Repl.Core.Engine
             _references = new HashSet<string>();
         }
 
+        public IEnumerable<ScriptVariableData> Vars
+        {
+            get { return _scriptEngine.Vars; }
+        }
+
         public void AddReference(string reference)
         {
             _references.Add(reference);

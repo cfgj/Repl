@@ -14,11 +14,6 @@ namespace Repl.Core.Commands
             get { return "load"; }
         }
 
-        public override int ArgumentsNumber
-        {
-            get { return 1; }
-        }
-
         public override string Description
         {
             get
@@ -27,7 +22,7 @@ namespace Repl.Core.Commands
             }
         }
 
-        protected override async Task<CommandResult> InternalExecuteAsync(CommandContext context, params string[] args)
+        public override async Task<CommandResult> ExecuteAsync(CommandContext context, params string[] args)
         {
             var scriptPath = args[0];
 

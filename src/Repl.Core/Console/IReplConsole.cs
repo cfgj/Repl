@@ -8,9 +8,13 @@ namespace Repl.Core.Console
 
         void Write(string value, ConsoleColor color);
 
+        void Write(string format, params object[] args);
+
         void WriteLine(string value);
 
         void WriteLine(string value, ConsoleColor color);
+
+        void WriteLine(string format, params object[] args);
 
         string ReadLine();
 

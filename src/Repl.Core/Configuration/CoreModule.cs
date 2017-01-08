@@ -23,6 +23,7 @@ namespace Repl.Core.Configuration
             builder.RegisterType<LoadScriptCommand>().As<ILoadScriptCommand>();
             builder.RegisterType<ResetExecutionEnvironmentCommand>().As<IResetExecutionEnvironmentCommand>();
             builder.RegisterType<HelpCommand>().As<IHelpCommand>();
+            builder.RegisterType<ViewVarsCommand>().As<IViewVarsCommand>();
         }
     }
 }

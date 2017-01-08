@@ -12,11 +12,6 @@ namespace Repl.Core.Commands
             get { return "help"; }
         }
 
-        public override int ArgumentsNumber
-        {
-            get { return 0; }
-        }
-
         public override string Description
         {
             get
@@ -25,7 +20,7 @@ namespace Repl.Core.Commands
             }
         }
 
-        protected override Task<CommandResult> InternalExecuteAsync(CommandContext context, params string[] args)
+        public override Task<CommandResult> ExecuteAsync(CommandContext context, params string[] args)
         {
             context.Console.WriteLine($"Commands available int the REPL:");
             foreach (var command in context.Commands)

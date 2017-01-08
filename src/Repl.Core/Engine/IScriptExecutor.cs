@@ -5,6 +5,8 @@ namespace Repl.Core.Engine
 {
     public interface IScriptExecutor
     {
+        IEnumerable<ScriptVariableData> Vars { get; }
+
         void AddReference(string reference);
 
         Task<IScriptResult> ExecuteAsync(string script);

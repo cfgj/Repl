@@ -18,6 +18,11 @@ namespace Repl.Core.Console
             ResetColor();
         }
 
+        public void Write(string format, params object[] args)
+        {
+            C.Write(format, args);
+        }
+
         public void WriteLine(string value)
         {
             C.WriteLine(value);
@@ -28,6 +33,11 @@ namespace Repl.Core.Console
             C.ForegroundColor = color;
             WriteLine(value);
             ResetColor();
+        }
+
+        public void WriteLine(string format, params object[] args)
+        {
+            C.WriteLine(format, args);
         }
 
         public string ReadLine()
