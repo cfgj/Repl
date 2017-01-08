@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,22 +9,41 @@ namespace Repl.Core.Commands
 {
     public interface IViewVarsCommand : ICommand { }
 
-    public class ViewVarsCommand : CommandBase, IViewVarsCommand
+    public class ViewVarsCommand : IViewVarsCommand
     {
-        public override string Name
+        public string Name
         {
             get { return "vars"; }
         }
 
-        public override string Description
+        public string Description
         {
             get
             {
-                return "Displays declared variables.";
+                return "Displays declared variables (their name and type).";
             }
         }
 
-        public override Task<CommandResult> ExecuteAsync(CommandContext context, params string[] args)
+        public IDictionary<string, string> Parameters
+        {
+            get
+            {
+                return new Dictionary<string, string>
+                {
+                    { "short", "Displays only variable names." }
+                };
+            }
+        }
+
+        public string Usage
+        {
+            get
+            {
+                return "#vars [short]";
+            }
+        }
+
+        public Task<CommandResult> ExecuteAsync(CommandContext context, params string[] args)
         {
             var shortMode = args.Count() == 1 && args[0] == "short";
 

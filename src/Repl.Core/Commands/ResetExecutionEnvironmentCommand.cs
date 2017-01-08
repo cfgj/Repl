@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Repl.Core.Command;
 
@@ -5,14 +6,14 @@ namespace Repl.Core.Commands
 {
     public interface IResetExecutionEnvironmentCommand : ICommand { }
 
-    public class ResetExecutionEnvironmentCommand : CommandBase, IResetExecutionEnvironmentCommand
+    public class ResetExecutionEnvironmentCommand : IResetExecutionEnvironmentCommand
     {
-        public override string Name
+        public string Name
         {
             get { return "reset"; }
         }
 
-        public override string Description
+        public string Description
         {
             get
             {
@@ -20,7 +21,20 @@ namespace Repl.Core.Commands
             }
         }
 
-        public override Task<CommandResult> ExecuteAsync(CommandContext context, params string[] args)
+        public IDictionary<string, string> Parameters
+        {
+            get { return new Dictionary<string, string>(); }
+        }
+
+        public string Usage
+        {
+            get
+            {
+                return "#reset";
+            }
+        }
+
+        public Task<CommandResult> ExecuteAsync(CommandContext context, params string[] args)
         {
             context.ScriptExecutor.Reset();
             var result = new CommandResult(ExecutedCommandStatus.Success, "Execution environment restored to the initial state.");

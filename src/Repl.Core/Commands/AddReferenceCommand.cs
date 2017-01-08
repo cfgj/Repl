@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Repl.Core.Command;
 
@@ -6,14 +7,14 @@ namespace Repl.Core.Commands
 {
     public interface IAddReferenceCommand : ICommand { }
 
-    public class AddReferenceCommand : CommandBase, IAddReferenceCommand
+    public class AddReferenceCommand : IAddReferenceCommand
     {
-        public override string Name
+        public string Name
         {
             get { return "r"; }
         }
 
-        public override string Description
+        public string Description
         {
             get
             {
@@ -21,7 +22,23 @@ namespace Repl.Core.Commands
             }
         }
 
-        public override Task<CommandResult> ExecuteAsync(CommandContext context, params string[] args)
+        public IDictionary<string, string> Parameters
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public string Usage
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public Task<CommandResult> ExecuteAsync(CommandContext context, params string[] args)
         {
             // if (args.Length != 1)
             //     new CommandResult(ExecutedCommandStatus.Error, "Wrong arguments count.");

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Repl.Core.Command;
@@ -7,22 +8,41 @@ namespace Repl.Core.Commands
 {
     public interface ILoadScriptCommand : ICommand { }
 
-    public class LoadScriptCommand : CommandBase, ILoadScriptCommand
+    public class LoadScriptCommand : ILoadScriptCommand
     {
-        public override string Name
+        public string Name
         {
             get { return "load"; }
         }
 
-        public override string Description
+        public string Description
         {
             get
             {
-                return "Is used to execute a script file. Arguments: path.";
+                return "Loads and executes a script file.";
             }
         }
 
-        public override async Task<CommandResult> ExecuteAsync(CommandContext context, params string[] args)
+        public IDictionary<string, string> Parameters
+        {
+            get
+            {
+                return new Dictionary<string, string>
+                {
+                    { "path", "Full path of file." }
+                };
+            }
+        }
+
+        public string Usage
+        {
+            get
+            {
+                return "#load path/of/file.csx";
+            }
+        }
+
+        public async Task<CommandResult> ExecuteAsync(CommandContext context, params string[] args)
         {
             var scriptPath = args[0];
 

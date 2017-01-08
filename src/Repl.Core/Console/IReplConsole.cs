@@ -10,6 +10,8 @@ namespace Repl.Core.Console
 
         void Write(string format, params object[] args);
 
+        void WriteLine();
+
         void WriteLine(string value);
 
         void WriteLine(string value, ConsoleColor color);

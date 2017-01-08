@@ -23,6 +23,11 @@ namespace Repl.Core.Console
             C.Write(format, args);
         }
 
+        public void WriteLine()
+        {
+            C.WriteLine();
+        }
+
         public void WriteLine(string value)
         {
             C.WriteLine(value);

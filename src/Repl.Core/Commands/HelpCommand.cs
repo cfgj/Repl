@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Repl.Core.Command;
 
@@ -5,27 +7,76 @@ namespace Repl.Core.Commands
 {
     public interface IHelpCommand : ICommand { }
 
-    public class HelpCommand : CommandBase, IHelpCommand
+    public class HelpCommand : IHelpCommand
     {
-        public override string Name
+        public string Name
         {
             get { return "help"; }
         }
 
-        public override string Description
+        public string Description
         {
             get
             {
-                return "Output all commands with description.";
+                return "Displays commands with their description. If argument is specified the help for the specific command will be display.";
             }
         }
 
-        public override Task<CommandResult> ExecuteAsync(CommandContext context, params string[] args)
+        public IDictionary<string, string> Parameters
         {
-            context.Console.WriteLine($"Commands available int the REPL:");
-            foreach (var command in context.Commands)
+            get
             {
-                context.Console.WriteLine($"#{command.Key} : {command.Value.Description}");
+                return new Dictionary<string, string>
+                {
+                    { "command-name", "Command name." }
+                };
+            }
+        }
+
+        public string Usage
+        {
+            get
+            {
+                return "#help [command-name]";
+            }
+        }
+
+        public Task<CommandResult> ExecuteAsync(CommandContext context, params string[] args)
+        {
+            var commandName = args[0];
+
+            if (string.IsNullOrEmpty(commandName))
+            {
+                context.Console.WriteLine($"Commands available int the REPL:");
+                foreach (var command in context.Commands)
+                {
+                    context.Console.WriteLine("{0} : {1}", command.Key, command.Value.Description);
+                }
+            }
+            else if (context.Commands.ContainsKey(commandName))
+            {
+                var command = context.Commands[commandName];
+
+                context.Console.WriteLine(command.Description);
+                context.Console.WriteLine();
+
+                context.Console.WriteLine("Usage:");
+                context.Console.WriteLine(command.Usage);
+                context.Console.WriteLine();
+
+                if (command.Parameters.Any())
+                {
+                    context.Console.WriteLine("Parameters:");
+                    foreach (var parameter in command.Parameters)
+                    {
+                        context.Console.WriteLine("{0}\t{1}", parameter.Key, parameter.Value);
+                    }
+                    context.Console.WriteLine();
+                }
+            }
+            else
+            {
+
             }
 
             return Task.FromResult(new CommandResult(ExecutedCommandStatus.Success));
