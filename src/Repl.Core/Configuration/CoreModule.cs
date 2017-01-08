@@ -24,6 +24,7 @@ namespace Repl.Core.Configuration
             builder.RegisterType<ResetExecutionEnvironmentCommand>().As<IResetExecutionEnvironmentCommand>();
             builder.RegisterType<HelpCommand>().As<IHelpCommand>();
             builder.RegisterType<ViewVarsCommand>().As<IViewVarsCommand>();
+            builder.RegisterType<ClearConsoleCommand>().As<IClearConsoleCommand>();
         }
     }
 }

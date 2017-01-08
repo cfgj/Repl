@@ -38,7 +38,7 @@ namespace Repl.Core.Commands
         {
             get
             {
-                return "#load path/of/file.csx";
+                return "#load [path]";
             }
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,12 +44,12 @@ namespace Repl.Core.Commands
 
         public Task<CommandResult> ExecuteAsync(CommandContext context, params string[] args)
         {
-            var commandName = args[0];
+            var commandName = args.FirstOrDefault();
 
             if (string.IsNullOrEmpty(commandName))
             {
                 context.Console.WriteLine($"Commands available int the REPL:");
-                foreach (var command in context.Commands)
+                foreach (var command in context.Commands.OrderBy(c => c.Key))
                 {
                     context.Console.WriteLine("{0} : {1}", command.Key, command.Value.Description);
                 }
@@ -76,7 +77,7 @@ namespace Repl.Core.Commands
             }
             else
             {
-
+                context.Console.WriteLine($"Command \"{commandName}\" does not exist.", ConsoleColor.Red);
             }
 
             return Task.FromResult(new CommandResult(ExecutedCommandStatus.Success));

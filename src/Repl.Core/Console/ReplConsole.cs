@@ -6,6 +6,11 @@ namespace Repl.Core.Console
 
     public class ReplConsole : IReplConsole
     {
+        public void Clear()
+        {
+            C.Clear();
+        }
+
         public void Write(string value)
         {
             C.Write(value);

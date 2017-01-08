@@ -46,7 +46,8 @@ namespace Repl
                 _componentContext.Resolve<ILoadScriptCommand>(),
                 _componentContext.Resolve<IResetExecutionEnvironmentCommand>(),
                 _componentContext.Resolve<IHelpCommand>(),
-                _componentContext.Resolve<IViewVarsCommand>()
+                _componentContext.Resolve<IViewVarsCommand>(),
+                _componentContext.Resolve<IClearConsoleCommand>()
             };
             _commands = commands.ToDictionary(c => c.Name);
 
@@ -105,7 +106,10 @@ namespace Repl
 
             try
             {
-                var command = _commands.Where(c => c.Key == commandInfo.CommandName).Select(c => c.Value).FirstOrDefault();
+                var command = _commands
+                    .Where(c => c.Key == commandInfo.CommandName)
+                    .Select(c => c.Value)
+                    .FirstOrDefault();
 
                 if (command == null)
                 {
@@ -123,11 +127,11 @@ namespace Repl
             }
             finally
             {
-                Buffer = string.Empty;
+                ClearBuffer();
             }
         }
 
-        public void WriteCommandResult(CommandResult result)
+        private void WriteCommandResult(CommandResult result)
         {
             if (!string.IsNullOrWhiteSpace(result.Message))
             {
@@ -151,15 +155,23 @@ namespace Repl
 
         private async Task ExecuteScriptAsync()
         {
-            var result = await _scriptExecutor.ExecuteAsync(Buffer);
-            if (!result.IsComplete)
+            try
             {
-                Buffer += Environment.NewLine;
+                var result = await _scriptExecutor.ExecuteAsync(Buffer);
+                if (!result.IsComplete)
+                {
+                    Buffer += Environment.NewLine;
+                }
+                else
+                {
+                    WriteScriptResult(result);
+                    ClearBuffer();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                WriteScriptResult(result);
-                Buffer = string.Empty;
+                ClearBuffer();
+                throw ex;
             }
         }
 
@@ -177,6 +189,11 @@ namespace Repl
             {
                 _console.WriteLine("=> " + _serializer.Serialize(result.ReturnedValue), ConsoleColor.Green);
             }
+        }
+
+        private void ClearBuffer()
+        {
+            Buffer = string.Empty;
         }
 
         #endregion

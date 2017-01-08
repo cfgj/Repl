@@ -4,6 +4,8 @@ namespace Repl.Core.Console
 {
     public interface IReplConsole
     {
+        void Clear();
+
         void Write(string value);
 
         void Write(string value, ConsoleColor color);
