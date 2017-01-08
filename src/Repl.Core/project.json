@@ -1,10 +1,10 @@
 {
-  "version": "1.0.0-*",
+  "version": "0.1.0",
   "buildOptions": {
     "debugType": "portable"
   },
   "dependencies": {
-    "Repl.Utils": "1.0.0",
+    "Repl.Utils": "0.1.0",
     "System.Threading.Tasks": "4.3.0",
     "System.Reflection": "4.3.0",
     "System.Reflection.TypeExtensions": "4.3.0",

@@ -1,14 +1,14 @@
 {
-  "version": "1.0.0-*",
+  "version": "0.1.0",
   "buildOptions": {
     "debugType": "portable",
     "emitEntryPoint": true
   },
   "dependencies": {
     "Autofac": "4.2.1",
-    "Repl.Engine": "1.0.0",
-    "Repl.Core": "1.0.0",
-    "Repl.Utils": "1.0.0"
+    "Repl.Engine": "0.1.0",
+    "Repl.Core": "0.1.0",
+    "Repl.Utils": "0.1.0"
   },
   "frameworks": {
     "netcoreapp1.1": {

@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-*",
+  "version": "0.1.0",
   "buildOptions": {
     "debugType": "portable"
   },
@@ -7,7 +7,7 @@
     "Microsoft.CodeAnalysis.CSharp.Scripting": "2.0.0-rc2",
     "Autofac": "4.2.1",
     "System.Threading.Tasks": "4.3.0",
-    "Repl.Core": "1.0.0"
+    "Repl.Core": "0.1.0"
   },
   "frameworks": {
     "netstandard1.6": {
