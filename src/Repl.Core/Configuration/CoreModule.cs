@@ -25,6 +25,7 @@ namespace Repl.Core.Configuration
             builder.RegisterType<HelpCommand>().As<IHelpCommand>();
             builder.RegisterType<ViewVarsCommand>().As<IViewVarsCommand>();
             builder.RegisterType<ClearConsoleCommand>().As<IClearConsoleCommand>();
+            builder.RegisterType<ViewImportsCommand>().As<IViewImportsCommand>();
         }
     }
 }

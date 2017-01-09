@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Repl.Core.Command;
 using Repl.Core.Engine;
@@ -44,20 +46,26 @@ namespace Repl.Core.Commands
 
         public async Task<CommandResult> ExecuteAsync(CommandContext context, params string[] args)
         {
-            var scriptPath = args[0];
+            var scriptPath = args.Count() == 1 ? args[0] : null;
 
-            if (File.Exists(scriptPath))
+            try
             {
-                var script = File.ReadAllText(scriptPath);
-                var scriptResult = await context.ScriptExecutor.ExecuteAsync(script);
+                if (File.Exists(scriptPath))
+                {
+                    var script = File.ReadAllText(scriptPath);
+                    var scriptResult = await context.ScriptExecutor.ExecuteAsync(script);
+                    var commandStatus = scriptResult.Success ? ExecutedCommandStatus.Success : ExecutedCommandStatus.Error;
 
-                var commandStatus = scriptResult.Success ? ExecutedCommandStatus.Success : ExecutedCommandStatus.Error;
-
-                return new CommandResult(commandStatus, PrepareMessage(scriptResult));
+                    return new CommandResult(commandStatus, PrepareMessage(scriptResult));
+                }
+                else
+                {
+                    return new CommandResult(ExecutedCommandStatus.Error, string.Format("Script \"{0}\" not found.", scriptPath));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return new CommandResult(ExecutedCommandStatus.Error, $"Script \"{scriptPath}\" not found.");
+                return new CommandResult(ExecutedCommandStatus.Error, ex.Message);
             }
         }
 

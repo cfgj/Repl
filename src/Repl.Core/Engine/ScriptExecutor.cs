@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Repl.Utils;
 
@@ -24,6 +23,8 @@ namespace Repl.Core.Engine
 
         protected readonly IScriptEngine _scriptEngine;
 
+        protected HashSet<string> _imports;
+
         protected HashSet<string> _references;
 
         public ScriptExecutor(IScriptEngine scriptEngine)
@@ -31,8 +32,14 @@ namespace Repl.Core.Engine
             ArgumentsGuard.ThrowIfNull(scriptEngine, nameof(scriptEngine));
 
             _scriptEngine = scriptEngine;
-
             _references = new HashSet<string>();
+
+            _imports = new HashSet<string>(DefaultImports);
+        }
+
+        public IEnumerable<string> Imports
+        {
+            get { return _imports; }
         }
 
         public IEnumerable<ScriptVariableData> Vars
@@ -56,9 +63,9 @@ namespace Repl.Core.Engine
             allReferences.UnionWith(_references);
             allReferences.UnionWith(references);
 
-            var allImports = DefaultImports.Union(imports).Distinct();
+            _imports.UnionWith(imports);
 
-            return await _scriptEngine.RunAsync(script, allReferences, allImports);
+            return await _scriptEngine.RunAsync(script, allReferences, _imports);
         }
 
         public void Reset()

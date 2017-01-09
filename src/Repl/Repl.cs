@@ -47,7 +47,8 @@ namespace Repl
                 _componentContext.Resolve<IResetExecutionEnvironmentCommand>(),
                 _componentContext.Resolve<IHelpCommand>(),
                 _componentContext.Resolve<IViewVarsCommand>(),
-                _componentContext.Resolve<IClearConsoleCommand>()
+                _componentContext.Resolve<IClearConsoleCommand>(),
+                _componentContext.Resolve<IViewImportsCommand>()
             };
             _commands = commands.ToDictionary(c => c.Name);
 

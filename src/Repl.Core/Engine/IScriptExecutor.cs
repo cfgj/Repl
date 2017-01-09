@@ -5,6 +5,8 @@ namespace Repl.Core.Engine
 {
     public interface IScriptExecutor
     {
+        IEnumerable<string> Imports { get; }
+
         IEnumerable<ScriptVariableData> Vars { get; }
 
         void AddReference(string reference);

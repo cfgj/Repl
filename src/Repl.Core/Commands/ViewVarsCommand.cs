@@ -47,12 +47,12 @@ namespace Repl.Core.Commands
         {
             var shortMode = args.Count() == 1 && args[0] == "short";
 
-            var vars = context.ScriptExecutor.Vars;
+            var vars = context.ScriptExecutor.Vars.OrderBy(v => v.Name);
 
             if (vars.Any())
             {
                 var last = vars.Last();
-                var stringVars = vars.OrderBy(v => v.Name).Aggregate(
+                var stringVars = vars.Aggregate(
                     new StringBuilder(),
                     (acc, v) =>
                     {
