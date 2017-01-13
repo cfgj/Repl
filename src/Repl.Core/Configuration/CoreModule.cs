@@ -2,6 +2,7 @@ using Autofac;
 using Repl.Core.Commands;
 using Repl.Core.Console;
 using Repl.Core.Engine;
+using Repl.Core.Preprocessors;
 using Repl.Core.Serialization;
 
 namespace Repl.Core.Configuration
@@ -13,6 +14,7 @@ namespace Repl.Core.Configuration
             builder.RegisterType<ScriptExecutor>().As<IScriptExecutor>();
             builder.RegisterType<ReturnedValueSerializer>().As<IReturnedValueSerializer>();
             builder.RegisterType<ReplConsole>().As<IReplConsole>();
+            builder.RegisterType<ScriptPreprocessor>().As<IScriptPreprocessor>();
 
             RegisterCommands(builder);
         }

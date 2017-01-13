@@ -1,6 +1,7 @@
 using Autofac;
 using Repl.Core.Configuration;
 using Repl.Core.Engine;
+using Repl.Core.Preprocessors;
 
 namespace Repl.Engine.Roslyn
 {
@@ -17,6 +18,7 @@ namespace Repl.Engine.Roslyn
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<RoslynScriptEngine>().As<IScriptEngine>();
+            builder.RegisterType<RoslynImportExtractor>().As<IImportExtractor>();
         }
     }
 }

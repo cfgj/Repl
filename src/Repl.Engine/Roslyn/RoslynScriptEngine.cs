@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis;
 
 namespace Repl.Engine.Roslyn
 {
@@ -92,10 +91,9 @@ namespace Repl.Engine.Roslyn
             });
         }
 
-        protected bool IsComplete(string code)
+        protected bool IsComplete(string script)
         {
-            var options = new CSharpParseOptions(LanguageVersion.CSharp6, DocumentationMode.Parse, SourceCodeKind.Script, null);
-            var syntaxTree = SyntaxFactory.ParseSyntaxTree(code, options);
+            var syntaxTree = RoslynHelper.GetSyntaxTree(script);
             return SyntaxFactory.IsCompleteSubmission(syntaxTree);
         }
 

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Repl.Core.Preprocessors;
 using Repl.Utils;
 
 namespace Repl.Core.Engine
@@ -23,15 +25,18 @@ namespace Repl.Core.Engine
 
         protected readonly IScriptEngine _scriptEngine;
 
+        protected readonly IScriptPreprocessor _preprocessor;
+
         protected HashSet<string> _imports;
 
         protected HashSet<string> _references;
 
-        public ScriptExecutor(IScriptEngine scriptEngine)
+        public ScriptExecutor(IScriptEngine scriptEngine, IScriptPreprocessor preprocessor)
         {
             ArgumentsGuard.ThrowIfNull(scriptEngine, nameof(scriptEngine));
 
             _scriptEngine = scriptEngine;
+            _preprocessor = preprocessor;
             _references = new HashSet<string>();
 
             _imports = new HashSet<string>(DefaultImports);
@@ -59,13 +64,25 @@ namespace Repl.Core.Engine
 
         public async Task<IScriptResult> ExecuteAsync(string script, IEnumerable<string> references, IEnumerable<string> imports)
         {
+            var preprocessedScript = _preprocessor.Process(script);
+
             var allReferences = new HashSet<string>(DefaultReferences);
             allReferences.UnionWith(_references);
             allReferences.UnionWith(references);
 
+            var importsIntersection = _imports.Intersect(preprocessedScript.Imports).ToList();
+
+            _imports.UnionWith(preprocessedScript.Imports);
             _imports.UnionWith(imports);
 
-            return await _scriptEngine.RunAsync(script, allReferences, _imports);
+            var result = await _scriptEngine.RunAsync(script, allReferences, _imports);
+
+            if (!result.Success)
+            {
+                _imports.RemoveWhere(i => preprocessedScript.Imports.Except(importsIntersection).Contains(i));
+            }
+
+            return result;
         }
 
         public void Reset()
